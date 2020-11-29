@@ -97,6 +97,7 @@ label {
 }
 
 .input {
+    font-family: Roboto;
     width: 100%;
     padding: 12px;
     border: 1px solid #ccc;
@@ -130,4 +131,76 @@ select {
     letter-spacing: 0px;
     color: #42515f;
     background-color: transparent;
+}
+
+.buttonParent {
+    display: flex;
+    margin-top: 10px;
+    justify-content: space-between;
+    margin-top: 20px;
+}
+
+.button {
+    font-size: 20px;
+    font-family: Roboto;
+    letter-spacing: 0px;
+    color: #42515f;
+    opacity: 1;
+    background: transparent;
+    border: 1px solid #707070;
+    font-weight: 400;
+    min-width: 140px;
+    padding: 7px 7px;
+    cursor: pointer;
+}
+
+.submitButton {
+    border: none;
+    background-color: #f5f5f5;
+    margin-right: 30px;
+}
+
+.cancelButton {
+    text-decoration: none;
+    text-align: center;
+}
+
+@media only screen and (max-width: 960px) and (min-width: 600px) {
+    .cancelButton {
+        margin-left: 0px;
+    }
+    .form {
+        width: 85%;
+        padding: 44px 20px;
+        ;
+    }
+}
+
+@media only screen and (max-width: 600px) {
+    .form {
+        margin-top: 10px;
+    }
+    .row-content {
+        flex-direction: column;
+        align-items: center;
+    }
+    .profile-radio-content {
+        flex-flow: wrap;
+    }
+    .submit-reset {
+        width: 100%;
+        display: flex;
+        flex-grow: 1;
+        flex-flow: wrap;
+        flex-direction: row-reverse;
+        justify-content: space-between;
+        margin-bottom: 20px;
+    }
+    .submitButton {
+        margin: 0;
+    }
+    .buttonParent {
+        flex-direction: column-reverse;
+        align-items: flex-end;
+    }
 }
