@@ -122,6 +122,7 @@ window.addEventListener("DOMContentLoaded", () => {
 const save = () => {
     try {
         let employeePayrollData = createEmployeePayrollObject();
+        updateLocalStorage(employeePayrollData);
     } catch (submitError) {
         alert(submitError);
         return;
@@ -161,3 +162,14 @@ const getValue = (propertyId) => {
     let value = document.querySelector(propertyId).value;
     return value;
 };
+
+function updateLocalStorage(employeePayrollData) {
+    let employeePayrollList = JSON.parse(localStorage.getItem("EmployeePayrollList"));
+    if (employeePayrollList != undefined) {
+        employeePayrollList.push(employeePayrollData);
+    } else {
+        employeePayrollList = [employeePayrollData];
+    }
+    alert("Local Storage Updated Successfully!\nTotal Employees : " + employeePayrollList.length);
+    localStorage.setItem("EmployeePayrollList", JSON.stringify(employeePayrollList));
+}
