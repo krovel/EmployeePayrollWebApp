@@ -45,8 +45,10 @@ const createInnerHtml = () => {
 
 const getDepartmentHtml = (departmentList) => {
     let departmentHtml = "";
-    for (let department of departmentList) {
-        departmentHtml = `${departmentHtml} <div class="dept-label">${department}</div>`;
+    if (departmentList) {
+        for (let department of departmentList) {
+            departmentHtml = `${departmentHtml} <div class="dept-label">${department}</div>`;
+        }
     }
     return departmentHtml;
 };
