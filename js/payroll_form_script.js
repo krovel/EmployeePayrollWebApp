@@ -77,46 +77,53 @@ window.addEventListener("DOMContentLoaded", () => {
     const name = document.querySelector("#name");
     const nameError = document.querySelector(".name-error");
     const validName = document.querySelector(".valid-name");
-    name.addEventListener("input", function() {
-        if (name.value.length == 0) {
-            nameError.textContent = "";
-            validName.textContent = "";
-        } else {
-            try {
-                (new EmployeePayrollData).name = name.value;
+    if (name) {
+        name.addEventListener("input", function() {
+            if (name.value.length == 0) {
                 nameError.textContent = "";
-                validName.textContent = '✓';
-                document.querySelector(".submitButton").disabled = false;
-            } catch (error) {
-                nameError.textContent = error;
                 validName.textContent = "";
-                document.querySelector(".submitButton").disabled = true;
+            } else {
+                try {
+                    (new EmployeePayrollData).name = name.value;
+                    nameError.textContent = "";
+                    validName.textContent = '✓';
+                    document.querySelector(".submitButton").disabled = false;
+                } catch (error) {
+                    nameError.textContent = error;
+                    validName.textContent = "";
+                    document.querySelector(".submitButton").disabled = true;
+                }
             }
-        }
-    });
+        });
+    }
+
 
     const startDate = document.querySelector("#startDate");
     const startDateError = document.querySelector(".startDate-error");
     const validStartDate = document.querySelector(".valid-startDate");
-    startDate.addEventListener("input", function() {
-        try {
-            let dateString = document.querySelector("#month").value + " " + document.querySelector("#day").value + ", " + document.querySelector("#year").value;
-            (new EmployeePayrollData).startDate = new Date(dateString);
-            startDateError.textContent = "";
-            validStartDate.textContent = '✓';
-            document.querySelector(".submitButton").disabled = false;
-        } catch (error) {
-            startDateError.textContent = error;
-            validStartDate.textContent = "";
-            document.querySelector(".submitButton").disabled = true;
-        }
-    });
+    if (startDate) {
+        startDate.addEventListener("input", function() {
+            try {
+                let dateString = document.querySelector("#month").value + " " + document.querySelector("#day").value + ", " + document.querySelector("#year").value;
+                (new EmployeePayrollData).startDate = new Date(dateString);
+                startDateError.textContent = "";
+                validStartDate.textContent = '✓';
+                document.querySelector(".submitButton").disabled = false;
+            } catch (error) {
+                startDateError.textContent = error;
+                validStartDate.textContent = "";
+                document.querySelector(".submitButton").disabled = true;
+            }
+        });
+    }
 
     const salary = document.querySelector("#salary");
     const output = document.querySelector(".salary-output");
-    salary.oninput = function() {
-        output.textContent = salary.value;
-    };
+    if (salary) {
+        salary.oninput = function() {
+            output.textContent = salary.value;
+        };
+    }
 });
 
 const save = () => {
@@ -145,6 +152,7 @@ const createEmployeePayrollObject = () => {
         alert(error);
         return;
     }
+    employeePayrollData.id = createEmployeeId();
     alert("Employee Added Successfully!\n" + employeePayrollData.toString());
     return employeePayrollData;
 };
@@ -173,6 +181,13 @@ function updateLocalStorage(employeePayrollData) {
     alert("Local Storage Updated Successfully!\nTotal Employees : " + employeePayrollList.length);
     localStorage.setItem("EmployeePayrollList", JSON.stringify(employeePayrollList));
 }
+
+const createEmployeeId = () => {
+    let employeeId = localStorage.getItem("EmployeeID");
+    employeeId = !employeeId ? 1 : (parseInt(employeeId) + 1).toString();
+    localStorage.setItem("EmployeeID", employeeId);
+    return employeeId;
+};
 
 const resetForm = () => {
     setDefaultValue("#name", "");
