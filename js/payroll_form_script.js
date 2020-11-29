@@ -1,76 +1,5 @@
-class EmployeePayrollData {
-
-    get id() {
-        return this._id;
-    }
-    set id(id) {
-        this._id = id;
-    }
-
-    get name() {
-        return this._name;
-    }
-    set name(name) {
-        const NAME_REGEX = RegExp("^[A-Z]{1}[a-z]{2,}([ ][A-Z]{1}[a-z]{2,})?$");
-        if (NAME_REGEX.test(name)) {
-            this._name = name;
-        } else throw "Name is Incorrect!";
-    }
-
-    get gender() {
-        return this._gender;
-    }
-    set gender(gender) {
-        this._gender = gender;
-    }
-
-    get profilePicture() {
-        return this._profilePicture;
-    }
-    set profilePicture(profilePicture) {
-        this._profilePicture = profilePicture;
-    }
-
-    get salary() {
-        return this._salary;
-    }
-    set salary(salary) {
-        this._salary = salary;
-    }
-
-    get startDate() {
-        return this._startDate;
-    }
-    set startDate(startDate) {
-        if (startDate <= new Date()) {
-            this._startDate = startDate;
-        } else throw "Start Date is Incorrect!";
-    }
-
-    get departments() {
-        return this._departments;
-    }
-    set departments(departments) {
-        if (departments.length != 0) {
-            this._departments = departments;
-        } else throw "No Department Entered!";
-    }
-
-    get note() {
-        return this._note;
-    }
-    set note(note) {
-        this._note = note;
-    }
-
-    toString() {
-        const options = { year: 'numeric', month: 'long', day: 'numeric' };
-        const employeeDate = !this.startDate ? "undefined" :
-            this.startDate.toLocaleDateString("en-US", options);
-        return "[ id: " + this.id + ", name: " + this.name + ", gender: " + this.gender + ", profilePicture: " + this._profilePicture +
-            ", salary: " + this.salary + ", startDate: " + employeeDate + ", departments: " + this.departments + ", note: " + this._note + " ]" + "\n";
-    }
-}
+let isUpdate = false;
+let employeePayrollObject = {};
 
 window.addEventListener("DOMContentLoaded", () => {
 
@@ -96,7 +25,6 @@ window.addEventListener("DOMContentLoaded", () => {
             }
         });
     }
-
 
     const startDate = document.querySelector("#startDate");
     const startDateError = document.querySelector(".startDate-error");
@@ -124,6 +52,8 @@ window.addEventListener("DOMContentLoaded", () => {
             output.textContent = salary.value;
         };
     }
+
+    checkForUpdate();
 });
 
 const save = () => {
@@ -189,40 +119,79 @@ const createEmployeeId = () => {
     return employeeId;
 };
 
+const setForm = () => {
+    setValue("#name", employeePayrollObject._name);
+    setSelectedValues("[name=profile]", employeePayrollObject._profilePicture);
+    setSelectedValues("[name=gender]", employeePayrollObject._gender);
+    setSelectedValues("[name=department]", employeePayrollObject._departments);
+    setRange("#salary", ".salary-output", employeePayrollObject._salary);
+    setValue("#notes", employeePayrollObject._note);
+    let date = stringifyDate(employeePayrollObject._startDate).split(" ");
+    setValue("#day", date[0]);
+    setValue("#month", date[1]);
+    setValue("#year", date[2]);
+}
+
 const resetForm = () => {
-    setDefaultValue("#name", "");
-    setDefautlText(".name-error");
-    setDefautlText(".valid-name");
+    setValue("#name", "");
+    setDefaultText(".name-error");
+    setDefaultText(".valid-name");
     unsetSelectedValues("[name=profile]");
     unsetSelectedValues("[name=gender]");
     unsetSelectedValues("[name=department]");
-    resetRange("#salary", ".salary-output");
-    setDefaultValue("#day", "1");
-    setDefaultValue("#month", "January");
-    setDefaultValue("#year", "2020");
-    setDefautlText(".startDate-error");
-    setDefautlText(".valid-startDate");
-    setDefaultValue("#notes", "");
+    setRange("#salary", ".salary-output", 400000);
+    setSelectedIndex("#day", 0);
+    setSelectedIndex("#month", 0);
+    setSelectedIndex("#year", 0);
+    setDefaultText(".startDate-error");
+    setDefaultText(".valid-startDate");
+    setValue("#notes", "");
 };
 
-const setDefaultValue = (propertyId, value) => {
+const setValue = (propertyId, value) => {
     const element = document.querySelector(propertyId);
     element.value = value;
 };
 
+const setSelectedIndex = (propertyId, index) => {
+    const element = document.querySelector(propertyId);
+    element.selectedIndex = index;
+};
+
 const unsetSelectedValues = (propertyName) => {
-    allValues = document.querySelectorAll(propertyName);
+    let allValues = document.querySelectorAll(propertyName);
     allValues.forEach(input => input.checked == false);
 };
 
-const resetRange = (propertyId, outputId) => {
+const setSelectedValues = (propertyName, values) => {
+    let allValues = document.querySelectorAll(propertyName);
+    allValues.forEach(input => {
+        if (Array.isArray(values)) {
+            if (values.includes(input.value)) {
+                input.checked = true;
+            }
+        } else if (input.value == values) {
+            input.checked = true;
+        }
+    });
+};
+
+const setRange = (propertyId, outputId, rangeValue) => {
     const rangeElement = document.querySelector(propertyId);
-    rangeElement.value = 400000;
+    rangeElement.value = rangeValue;
     const outputElement = document.querySelector(outputId);
     outputElement.textContent = rangeElement.value;
 };
 
-const setDefautlText = (propertyId) => {
+const setDefaultText = (propertyId) => {
     const contentElement = document.querySelector(propertyId);
     contentElement.textContent = "";
+};
+
+const checkForUpdate = () => {
+    const employeeToEditJson = localStorage.getItem("EmployeeToEdit");
+    isUpdate = employeeToEditJson ? true : false;
+    if (!isUpdate) return;
+    employeePayrollObject = JSON.parse(employeeToEditJson);
+    setForm();
 };
