@@ -26,6 +26,8 @@
             <div class="row-content">
                 <label class="label text" for="name">Name</label>
                 <input class="input" type="text" id="name" name="name" placeholder="Your name.." required>
+                <valid-message class="valid-name" for="name"></valid-message>
+                <error-output class="name-error" for="name"></error-output>
             </div>
             <div class="row-content">
                 <label class="label text" for="profile">Profile Image</label>
@@ -52,11 +54,11 @@
                 <label class="label text" for="gender">Gender</label>
                 <div>
                     <label>
-                        <input type="radio" id="male" name="gender" value="male">
+                        <input type="radio" id="male" name="gender" value="male" required>
                         <label class="text" for="male">Male</label>
                     </label>
                     <label>
-                        <input type="radio" id="female" name="gender" value="female">
+                        <input type="radio" id="female" name="gender" value="female" required>
                         <label class="text" for="female">Female</label>
                     </label>
                 </div>
@@ -93,7 +95,7 @@
             </div>
             <div class="row-content">
                 <label class="label text" for="startDate">Start Date</label>
-                <div>
+                <div name="startdate" id="startDate">
                     <select id="day" name="Day">
                     <option value="1">1</option>
                     <option value="2">2</option>
@@ -149,6 +151,8 @@
                         <option value="2016">2016</option>
                     </select>
                 </div>
+                <valid-message class="valid-startDate" for="startDate"></valid-message>
+                <error-output class="startDate-error" for="startDate"></error-output>
             </div>
             <div class="row-content">
                 <label class="label text" for="notes">Notes</label>
