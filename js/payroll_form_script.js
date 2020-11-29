@@ -60,14 +60,14 @@ class EmployeePayrollData {
         return this._note;
     }
     set note(note) {
-        thiss._note = note;
+        this._note = note;
     }
 
     toString() {
         const options = { year: 'numeric', month: 'long', day: 'numeric' };
         const employeeDate = !this.startDate ? "undefined" :
             this.startDate.toLocaleDateString("en-US", options);
-        return "[ id: " + this.id + ", name: " + this.name + ", gender: " + this.gender + ",profilePicture: " + this._profilePicture +
+        return "[ id: " + this.id + ", name: " + this.name + ", gender: " + this.gender + ", profilePicture: " + this._profilePicture +
             ", salary: " + this.salary + ", startDate: " + employeeDate + ", departments: " + this.departments + ", note: " + this._note + " ]" + "\n";
     }
 }
@@ -118,3 +118,46 @@ window.addEventListener("DOMContentLoaded", () => {
         output.textContent = salary.value;
     };
 });
+
+const save = () => {
+    try {
+        let employeePayrollData = createEmployeePayrollObject();
+    } catch (submitError) {
+        alert(submitError);
+        return;
+    }
+};
+
+const createEmployeePayrollObject = () => {
+    let employeePayrollData = new EmployeePayrollData();
+
+    employeePayrollData.name = getValue("#name");
+    employeePayrollData.gender = getSelectedValues("[name=gender]").pop();
+    employeePayrollData.profilePicture = getSelectedValues("[name=profile]").pop();
+    employeePayrollData.salary = getValue("#salary");
+    dateString = document.querySelector("#month").value + " " + document.querySelector("#day").value + ", " + document.querySelector("#year").value;
+    employeePayrollData.startDate = new Date(dateString);
+    employeePayrollData.note = getValue("#notes");
+    try {
+        employeePayrollData.departments = getSelectedValues("[name=department]");
+    } catch (error) {
+        alert(error);
+        return;
+    }
+    alert("Employee Added Successfully!\n" + employeePayrollData.toString());
+    return employeePayrollData;
+};
+
+const getSelectedValues = (propertyName) => {
+    let allValues = document.querySelectorAll(propertyName);
+    let selectedValues = [];
+    allValues.forEach(input => {
+        if (input.checked) selectedValues.push(input.value);
+    });
+    return selectedValues;
+};
+
+const getValue = (propertyId) => {
+    let value = document.querySelector(propertyId).value;
+    return value;
+};
