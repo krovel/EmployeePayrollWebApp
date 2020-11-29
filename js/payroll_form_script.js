@@ -11,7 +11,10 @@ class EmployeePayrollData {
         return this._name;
     }
     set name(name) {
-        this._name = name;
+        const NAME_REGEX = RegExp("^[A-Z]{1}[a-z]{2,}([ ][A-Z]{1}[a-z]{2,})?$");
+        if (NAME_REGEX.test(name)) {
+            this._name = name;
+        } else throw "Name is Incorrect!";
     }
 
     get salary() {
@@ -32,14 +35,18 @@ class EmployeePayrollData {
         return this._startDate;
     }
     set startDate(startDate) {
-        this._startDate = startDate;
+        if (startDate <= new Date()) {
+            this._startDate = startDate;
+        } else throw "Start Date is Incorrect!";
     }
 
     get departments() {
         return this._departments;
     }
     set departments(departments) {
-        this._departments = departments;
+        if (departments.length != 0) {
+            this._departments = departments;
+        } else throw "No Department Entered!";
     }
 
     toString() {
@@ -53,16 +60,31 @@ class EmployeePayrollData {
 
 function save() {
     let employeePayrollData = new EmployeePayrollData();
-    employeePayrollData.name = document.querySelector("#name").value;
+    try {
+        employeePayrollData.name = document.querySelector("#name").value;
+    } catch (error) {
+        alert(error);
+        return;
+    }
     employeePayrollData.gender = document.querySelector("#male").checked ? "M" : "F";
     employeePayrollData.salary = document.querySelector("#salary").value;
     dateString = document.querySelector("#month").value + " " + document.querySelector("#day").value + ", " + document.querySelector("#year").value;
-    employeePayrollData.startDate = new Date(dateString);
+    try {
+        employeePayrollData.startDate = new Date(dateString);
+    } catch (error) {
+        alert(error);
+        return;
+    }
     let departmentsArray = [];
     document.querySelectorAll("[name=department]").forEach(input => {
         if (input.checked) departmentsArray.push(input.value);
     });
-    employeePayrollData.departments = departmentsArray;
+    try {
+        employeePayrollData.departments = departmentsArray;
+    } catch (error) {
+        alert(error);
+        return;
+    }
     alert("Employee Added Successfully!\n" + employeePayrollData.toString());
 }
 
